@@ -8,8 +8,23 @@ import (
 	"io/ioutil"
 	"net/http"
 
+	"errors"
 	"github.com/mickaelmagniez/phpipam-sdk-go/phpipam/session"
 )
+
+type ConvertibleBoolean bool
+
+func (bit *ConvertibleBoolean) UnmarshalJSON(data []byte) error {
+	asString := string(data)
+	if asString == "1" || asString == "true" {
+		*bit = true
+	} else if asString == "0" || asString == "false" {
+		*bit = false
+	} else {
+		return errors.New(fmt.Sprintf("Boolean unmarshal error: invalid input %s", asString))
+	}
+	return nil
+}
 
 // APIResponse represents a PHPIPAM response body. Both successful and
 // unsuccessful requests share the same response format.
@@ -25,7 +40,7 @@ type APIResponse struct {
 	Message string
 
 	// Whether or not the API request was successful.
-	Success bool
+	Success ConvertibleBoolean
 }
 
 // Request represents the API request.
