@@ -8,9 +8,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/paybyphone/phpipam-sdk-go/phpipam"
-	"github.com/paybyphone/phpipam-sdk-go/phpipam/session"
-	"github.com/paybyphone/phpipam-sdk-go/testacc"
+	"github.com/mickaelmagniez/phpipam-sdk-go/phpipam"
+	"github.com/mickaelmagniez/phpipam-sdk-go/phpipam/session"
+	"github.com/mickaelmagniez/phpipam-sdk-go/testacc"
 )
 
 var testCreateAddressInput = Address{
