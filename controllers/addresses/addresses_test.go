@@ -222,6 +222,23 @@ func fullSessionConfig() *session.Session {
 	}
 }
 
+func TestReserveFirstFreeAddressInSubnet(t *testing.T) {
+	ts := httpCreatedTestServer(testCreateAddressOutputJSON)
+	defer ts.Close()
+	sess := fullSessionConfig()
+	sess.Config.Endpoint = ts.URL
+	client := NewController(sess)
+
+	expected := testCreateAddressOutputExpected
+	actual, err := client.ReserveFirstFreeAddressInSubnet(3)
+	if err != nil {
+		t.Fatalf("Bad: %s", err)
+	}
+
+	if !reflect.DeepEqual(expected, actual) {
+		t.Fatalf("Expected %#v, got %#v", expected, actual)
+	}
+}
 func TestCreateAddress(t *testing.T) {
 	ts := httpCreatedTestServer(testCreateAddressOutputJSON)
 	defer ts.Close()

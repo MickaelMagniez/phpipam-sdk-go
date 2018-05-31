@@ -144,3 +144,12 @@ func (c *Controller) DeleteAddress(id int, RemoveDNS phpipam.BoolIntString) (mes
 	err = c.SendRequest("DELETE", fmt.Sprintf("/addresses/%d/", id), &in, &message)
 	return
 }
+
+// ReserveFirstFreeAddressInSubnet Reserve the first free IP address in a subnet and returns
+// it as a string. If there are no more available addresses, the string will be
+// blank.
+//
+func (c *Controller) ReserveFirstFreeAddressInSubnet(subtnetId int) (out string, err error) {
+	err = c.SendRequest("POST", fmt.Sprintf("/addresses/first_free/%d/", subtnetId), &struct{}{}, &out)
+	return
+}
