@@ -35,7 +35,9 @@ func loginSession(s *session.Session) error {
 	r.Input = &struct{}{}
 	r.Output = &out
 	if err := r.Send(); err != nil {
-		return err
+		if err := r.Send(); err != nil {
+			return err
+		}
 	}
 	s.Token = out
 	return nil
@@ -64,12 +66,18 @@ func (c *Client) SendRequest(method, uri string, in, out interface{}) error {
 	switch {
 	case err == nil:
 		return nil
+	case err.Error() == "Error from API (401): Unauthorized":
+		if err := loginSession(c.Session); err != nil {
+			return fmt.Errorf("Error refreshing expired PHPIPAM session token: %s", err)
+		}
+		return r.Send()
 	case err.Error() == "Error from API (403): Token expired":
 		if err := loginSession(c.Session); err != nil {
 			return fmt.Errorf("Error refreshing expired PHPIPAM session token: %s", err)
 		}
 		return r.Send()
 	}
+
 	return err
 }
 
