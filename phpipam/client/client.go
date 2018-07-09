@@ -29,6 +29,7 @@ func NewClient(s *session.Session) *Client {
 // valid operation if the session does not have a token yet.
 func loginSession(s *session.Session) error {
 	var out session.Token
+	s.Token = session.Token{}
 	r := request.NewRequest(s)
 	r.Method = "POST"
 	r.URI = "/user/"
